@@ -9,6 +9,7 @@ import { Place } from 'src/app/places/place.model';
 })
 export class CreateBookingComponent implements OnInit {
   @Input() selectedPlace: Place;
+  @Input() mode: string;
 
   constructor(private modalCtrl: ModalController) { }
 

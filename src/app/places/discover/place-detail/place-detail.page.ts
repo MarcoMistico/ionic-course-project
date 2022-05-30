@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ModalController, NavController } from '@ionic/angular';
+import { ActionSheetController, ModalController, NavController } from '@ionic/angular';
 import { CreateBookingComponent } from '../../../bookings/create-booking/create-booking.component';
 import { Place } from '../../place.model';
 import { PlacesService } from '../../places.service';
@@ -17,7 +17,8 @@ export class PlaceDetailPage implements OnInit {
     private navCtrl: NavController,
     private route: ActivatedRoute,
     private placesService: PlacesService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private actionSheetCtrl: ActionSheetController
   ) { }
 
   ngOnInit() {
@@ -34,23 +35,55 @@ export class PlaceDetailPage implements OnInit {
   onBookPlace() {
     // this.navCtrl.navigateBack('places/tabs/discover');
     // this.navCtrl.pop();
-    this.modalCtrl
+
+    this.actionSheetCtrl
       .create({
-        component: CreateBookingComponent,
-        componentProps: {
-          selectedPlace: this.place
-        }
+        header: 'Choose an Action',
+        buttons: [
+          {
+            text: 'Select Date',
+            handler: () => {
+              this.openBookingModal('select');
+            }
+          },
+          {
+            text: 'Random Date',
+            handler: () => {
+              this.openBookingModal('random');
+            }
+          },
+          {
+            text: 'Cancel',
+            role: 'cancel'
+          }
+        ]
       })
-      .then(modalEl => {
-        modalEl.present();
-        return modalEl.onDidDismiss();
-      })
-      .then(resultData => {
-        console.log(resultData);
-        if (resultData.role === 'confirm') {
-          console.log('BOOKED!');
-        }
+      .then(actionSheetEl => {
+        actionSheetEl.present();
       });
+  }
+
+  openBookingModal(mode: 'select' | 'random') {
+    console.log(mode);
+    this.modalCtrl
+    .create({
+      component: CreateBookingComponent,
+      componentProps: {
+        selectedPlace: this.place,
+        // eslint-disable-next-line object-shorthand
+        mode: mode
+      }
+    })
+    .then(modalEl => {
+      modalEl.present();
+      return modalEl.onDidDismiss();
+    })
+    .then(resultData => {
+      console.log(resultData);
+      if (resultData.role === 'confirm') {
+        console.log('BOOKED!');
+      }
+    });
   }
 
 }

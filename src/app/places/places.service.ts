@@ -42,4 +42,10 @@ export class PlacesService {
       ...this._places.find(place => place.id === placeId)
     };
   }
+
+  deletePlace(placeId: string) {
+    this._places = [
+      ...this._places.filter(place => place.id !== placeId)
+    ];
+  }
 }
