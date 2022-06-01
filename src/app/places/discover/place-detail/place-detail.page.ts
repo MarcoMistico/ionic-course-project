@@ -71,7 +71,7 @@ export class PlaceDetailPage implements OnInit {
       componentProps: {
         selectedPlace: this.place,
         // eslint-disable-next-line object-shorthand
-        mode: mode
+        selectedMode: mode
       }
     })
     .then(modalEl => {
